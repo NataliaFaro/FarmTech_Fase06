@@ -17,14 +17,14 @@ André Godoi
 
 ---
 
-## 📜 Descrição do Projeto
+## Descrição do Projeto
 A FarmTech Solutions está expandindo seus serviços de Inteligência Artificial para além do agronegócio, atendendo clientes em áreas como saúde animal, segurança patrimonial, controle de acessos e análise de documentos, e agora também em **visão computacional**.
 
 Este projeto simula uma visita a um cliente que quer entender, na prática, como funciona um sistema de visão computacional. Para isso, foi construído um detector de objetos com o **YOLOv5**, treinado com um dataset próprio, que demonstra o potencial e a acurácia da técnica ao identificar **bananas** e **cadernos** em imagens.
 
 ---
 
-# Entrega 1 — Detecção de Bananas e Cadernos com YOLOv5
+## Entrega 1 — Detecção de Bananas e Cadernos com YOLOv5
 
 ## Notebook
 O passo a passo completo (código comentado, gráficos, resultados e conclusões) está em:
