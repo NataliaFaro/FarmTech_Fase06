@@ -288,7 +288,7 @@ Como foi treinado no COCO, ele reconhece qualquer um dos 80 objetos do COCO, nã
 
 ## Como Executar (Entrega 2)
 
-1. Abrir o notebook no Google Colab: [Abrir no Colab]([LINK DO COLAB ENTREGA 2]);
+1. Abrir o notebook no Google Colab
 2. Ativar a GPU em *Ambiente de execução → Alterar tipo de ambiente de execução → GPU (T4)*;
 3. Ter a pasta `FarmTech_YOLO` no Google Drive (como na Entrega 1) e os pesos `best.pt` da Entrega 1 em `FarmTech_YOLO/resultados_runs/train/`. Se usar outro caminho, ajustar `DRIVE_DATASET`, `PESOS_30` e `PESOS_60` no notebook;
 4. Executar todas as células.
