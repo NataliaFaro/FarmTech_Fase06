@@ -151,8 +151,7 @@ Para uso real, recomenda-se ampliar o banco de imagens (centenas por classe), in
 ---
 
 ## 🎥 Vídeo da Entrega 1
-
-[LINK DO YOUTUBE NÃO LISTADO]
+https://youtu.be/EJR0Yj7dCCc
 
 ---
 
