@@ -1,6 +1,6 @@
 FIAP - Faculdade de Informática e Administração Paulista
 
-# FarmTech Solutions - Fase 6: Visão Computacional com YOLOv5
+# 🌱 FarmTech Solutions - Fase 6: Visão Computacional com YOLOv5
 
 ## 👨‍🎓 Integrantes
 Natalia de Lima Faro - RM 568610
@@ -19,6 +19,7 @@ André Godoi
 
 ## 📜 Descrição do Projeto
 A FarmTech Solutions está expandindo seus serviços de Inteligência Artificial para além do agronegócio, atendendo clientes em áreas como saúde animal, segurança patrimonial, controle de acessos e análise de documentos, e agora também em **visão computacional**.
+
 Este projeto simula uma visita a um cliente que quer entender, na prática, como funciona um sistema de visão computacional. Para isso, foi construído um detector de objetos com o **YOLOv5**, treinado com um dataset próprio, que demonstra o potencial e a acurácia da técnica ao identificar **bananas** e **cadernos** em imagens.
 
 ---
@@ -26,21 +27,18 @@ Este projeto simula uma visita a um cliente que quer entender, na prática, como
 # 📌 Entrega 1 — Detecção de Bananas e Cadernos com YOLOv5
 
 ## 📓 Notebook
-O passo a passo completo (código comentado, gráficos, resultados e conclusões) está no notebook:
-
-[Visualizar notebook no repositório](NataliaFaro_rm568610_pbl_fase6.ipynb)
+O passo a passo completo (código comentado, gráficos, resultados e conclusões) está em:
+👉 [Visualizar notebook no repositório](NataliaFaro_RM568610_pbl_fase6.ipynb)
 
 ---
 
 ## 🎯 Objetivo
-
 Criar um sistema de visão computacional com YOLO capaz de distinguir dois objetos bem diferentes entre si, e comparar o efeito do **número de épocas de treino** (30 e 60) sobre a acurácia, o erro e o desempenho do modelo.
 
 ---
 
 ## 🗂️ Dataset
-
-O dataset foi montado com **80 imagens**, combinando fotos tiradas por mim e fotos do Unsplash (créditos em [CREDITOS.md](CREDITOS.md)).
+O dataset foi montado com **80 imagens**, combinando fotos tiradas por mim e fotos do Unsplash (créditos em [Creditos.md](FarmTech_YOLO/Creditos.md)).
 
 | Classe | Índice | Treino | Validação | Teste | Total |
 |---|---|---|---|---|---|
@@ -92,17 +90,20 @@ Todas as imagens do dataset foram verificadas: cada imagem possui o seu arquivo 
 | 60 | teste | 0,780 | 0,875 | 0,829 | 0,486 | 3,1 min |
 
 ### Curvas de treino
+
 Evolução do erro (caixa e classe) e das métricas de validação ao longo das épocas, nos dois treinos:
 
-![Curvas de treino](resultados/curvas_treino.png)
+![Curvas de treino](FarmTech_YOLO/resultados/curvas_treino.png)
 
 ### Detecções nas imagens de teste
 
 **Modelo com 30 épocas**
-![Detecções no teste - 30 épocas](resultados/deteccoes_teste_30ep.png)
+
+![Detecções no teste - 30 épocas](FarmTech_YOLO/resultados/deteccoes_teste_30ep.png)
 
 **Modelo com 60 épocas**
-![Detecções no teste - 60 épocas](resultados/deteccoes_teste_60ep.png)
+
+![Detecções no teste - 60 épocas](FarmTech_YOLO/resultados/deteccoes_teste_60ep.png)
 
 ---
 
@@ -139,7 +140,7 @@ Para uso real, recomenda-se ampliar o banco de imagens (centenas por classe), in
 
 ## ⚙️ Como Executar o Projeto
 
-1. Abrir o notebook no Google Colab
+1. Abrir o notebook no Google Colab: [Abrir no Colab]([LINK DO COLAB]);
 2. Ativar a GPU em *Ambiente de execução → Alterar tipo de ambiente de execução → GPU (T4)*;
 3. Colocar a pasta do dataset no Google Drive em `Meu Drive/FarmTech_YOLO`, com as subpastas `images` e `labels` (cada uma com `train`, `val` e `test`). Se usar outro caminho, ajustar a variável `DRIVE_DATASET` no notebook;
 4. Executar todas as células. Os dois treinos levam poucos minutos na GPU T4;
@@ -157,14 +158,14 @@ Para uso real, recomenda-se ampliar o banco de imagens (centenas por classe), in
 
 ## 📸 Evidências de Execução
 
-Prints das etapas de verificação, treino, validação e teste, disponíveis em [`resultados/`](resultados/):
+Prints das etapas de verificação, treino, validação e teste, disponíveis em [`FarmTech_YOLO/resultados/`](FarmTech_YOLO/resultados/):
 
-1. [Verificação do dataset (64/8/8 imagens e rótulos)](resultados/verificacao_dataset.png)
-2. [Métricas de validação e teste do `val.py`](resultados/metricas_val_test.png)
-3. [Tabela comparativa: 30 x 60 épocas](resultados/tabela_comparativa.png)
-4. [Curvas de erro e de métricas dos dois treinos](resultados/curvas_treino.png)
-5. [Detecções no teste, modelo de 30 épocas](resultados/deteccoes_teste_30ep.png)
-6. [Detecções no teste, modelo de 60 épocas](resultados/deteccoes_teste_60ep.png)
+1. [Verificação do dataset (64/8/8 imagens e rótulos)](FarmTech_YOLO/resultados/verificacao_dataset.png)
+2. [Métricas de validação e teste do `val.py`](FarmTech_YOLO/resultados/metricas_val_test.png)
+3. [Tabela comparativa: 30 x 60 épocas](FarmTech_YOLO/resultados/tabela_comparativa.png)
+4. [Curvas de erro e de métricas dos dois treinos](FarmTech_YOLO/resultados/curvas_treino.png)
+5. [Detecções no teste, modelo de 30 épocas](FarmTech_YOLO/resultados/deteccoes_teste_30ep.png)
+6. [Detecções no teste, modelo de 60 épocas](FarmTech_YOLO/resultados/deteccoes_teste_60ep.png)
 
 ---
 
@@ -172,20 +173,21 @@ Prints das etapas de verificação, treino, validação e teste, disponíveis em
 
 ```
 ├── README.md
-├── CREDITOS.md
-├── NataliaFaro_rm568610_pbl_fase6.ipynb
-├── dataset/
-│   ├── images/   (train, val, test)
-│   └── labels/   (train, val, test)
-└── resultados/
+├── NataliaFaro_RM568610_pbl_fase6.ipynb
+└── FarmTech_YOLO/
+    ├── Creditos.md
+    ├── images/   (train, val, test)
+    ├── labels/   (train, val, test)
+    └── resultados/
 ```
 
-- **`NataliaFaro_rm568610_pbl_fase6.ipynb`:** notebook executado, com o passo a passo, o código comentado, os gráficos e as conclusões;
-- **`dataset/`:** imagens (versão reduzida) e rótulos no formato YOLO, separados em treino, validação e teste;
-- **`resultados/`:** prints das métricas, gráficos e detecções nas imagens de teste;
-- **`CREDITOS.md`:** fotógrafos das imagens do Unsplash.
+- **`NataliaFaro_RM568610_pbl_fase6.ipynb`:** notebook executado, com o passo a passo, o código comentado, os gráficos e as conclusões;
+- **`FarmTech_YOLO/images` e `FarmTech_YOLO/labels`:** imagens (versão reduzida) e rótulos no formato YOLO, separados em treino, validação e teste. A estrutura é a mesma usada no Google Drive pelo notebook;
+- **`FarmTech_YOLO/resultados`:** prints das métricas, gráficos e detecções nas imagens de teste;
+- **`FarmTech_YOLO/Creditos.md`:** fotógrafos das imagens do Unsplash.
 
 ---
 
 ## 🖼️ Créditos das Imagens
-Parte das imagens vem do [Unsplash](https://unsplash.com), usadas sob a [Licença Unsplash](https://unsplash.com/license). A lista completa está em [CREDITOS.md](CREDITOS.md).
+
+Parte das imagens vem do [Unsplash](https://unsplash.com), usadas sob a [Licença Unsplash](https://unsplash.com/license). A lista completa está em [Creditos.md](FarmTech_YOLO/Creditos.md).
