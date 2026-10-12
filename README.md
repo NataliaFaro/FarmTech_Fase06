@@ -24,20 +24,20 @@ Este projeto simula uma visita a um cliente que quer entender, na prática, como
 
 ---
 
-# 📌 Entrega 1 — Detecção de Bananas e Cadernos com YOLOv5
+# Entrega 1 — Detecção de Bananas e Cadernos com YOLOv5
 
-## 📓 Notebook
+## Notebook
 O passo a passo completo (código comentado, gráficos, resultados e conclusões) está em:
 👉 [Visualizar notebook no repositório](NataliaFaro_RM568610_pbl_fase6.ipynb)
 
 ---
 
-## 🎯 Objetivo
+## Objetivo
 Criar um sistema de visão computacional com YOLO capaz de distinguir dois objetos bem diferentes entre si, e comparar o efeito do **número de épocas de treino** (30 e 60) sobre a acurácia, o erro e o desempenho do modelo.
 
 ---
 
-## 🗂️ Dataset
+## Dataset
 O dataset foi montado com **80 imagens**, combinando fotos tiradas por mim e fotos do Unsplash (créditos em [Creditos.md](FarmTech_YOLO/Creditos.md)).
 
 | Classe | Índice | Treino | Validação | Teste | Total |
@@ -57,7 +57,7 @@ O dataset foi montado com **80 imagens**, combinando fotos tiradas por mim e fot
 
 ---
 
-## 🏷️ Rotulação
+## Rotulação
 
 As imagens foram rotuladas manualmente no [Make Sense AI](https://www.makesense.ai) e exportadas em formato YOLO (um `.txt` por imagem, com a classe e a posição da caixa).
 
@@ -71,7 +71,7 @@ Todas as imagens do dataset foram verificadas: cada imagem possui o seu arquivo 
 
 ---
 
-## 🤖 Modelo e Treinamento
+## Modelo e Treinamento
 
 - **Modelo:** YOLOv5s (Ultralytics), com pesos pré-treinados no COCO (*transfer learning*);
 - **Parâmetros fixos:** imagem de 640 px, batch de 16;
@@ -80,7 +80,7 @@ Todas as imagens do dataset foram verificadas: cada imagem possui o seu arquivo 
 
 ---
 
-## 📈 Resultados
+## Resultados
 
 | Épocas | Etapa | Precisão | Recall | mAP@0.5 | mAP@0.5:0.95 | Tempo de treino |
 |---|---|---|---|---|---|---|
@@ -107,7 +107,7 @@ Evolução do erro (caixa e classe) e das métricas de validação ao longo das 
 
 ---
 
-## 🔍 Análise dos Resultados
+## Análise dos Resultados
 
 - **Validação:** os dois modelos chegaram a mAP@0.5 de 0,995. O de 60 épocas teve recall e mAP@0.5:0.95 maiores, e o de 30 épocas teve precisão maior. A validação tem só 8 imagens e foi usada para escolher o melhor peso, então esses números são otimistas.
 - **Teste:** o desempenho caiu nos dois modelos, e o de **30 épocas foi melhor** na maioria das métricas (mAP@0.5 de 0,945 contra 0,829). O de 60 épocas só foi melhor no mAP@0.5:0.95, puxado por caixas mais justas nas bananas.
@@ -117,20 +117,20 @@ Evolução do erro (caixa e classe) e das métricas de validação ao longo das 
 
 ---
 
-## ✅ Pontos Fortes
+## Pontos Fortes
 
 - Classes visualmente muito distintas, o que facilita o aprendizado;
 - *Transfer learning* com pesos do COCO (dataset público com cerca de 80 categorias de objetos comuns) permite bons resultados com poucas imagens;
 - Dataset com variedade de fundos, iluminação e estados dos objetos.
 
-## ⚠️ Limitações
+## Limitações
 
 - **Dataset pequeno** (64 imagens de treino): com 8 imagens de validação e 8 de teste, um único erro muda muito as métricas;
 - **Fotos próprias concentradas no treino:** validação e teste usam só imagens do Unsplash, mais "limpas" que fotos do dia a dia;
 - **Séries de fotos parecidas** (mesmo cenário e objeto) podem inflar o desempenho no treino;
 - Apenas duas classes, sem imagens com os dois objetos juntos e sem objetos parecidos (como livros ou outras frutas) para medir falsos positivos.
 
-## 💼 Recomendação ao Cliente
+## Recomendação ao Cliente
 
 O sistema demonstra potencial: com apenas 64 imagens de treino, o YOLOv5 aprendeu a localizar bananas com confiabilidade e obteve mAP@0.5 de 0,945 no teste com 30 épocas. Os cadernos, porém, foram o ponto fraco, com falhas em objetos de aparência menos comum, e treinar por mais tempo (60 épocas) não melhorou o resultado.
 
@@ -138,7 +138,7 @@ Para uso real, recomenda-se ampliar o banco de imagens (centenas por classe), in
 
 ---
 
-## ⚙️ Como Executar o Projeto
+## Como Executar o Projeto
 
 1. Abrir o notebook no Google Colab: [Abrir no Colab]([LINK DO COLAB]);
 2. Ativar a GPU em *Ambiente de execução → Alterar tipo de ambiente de execução → GPU (T4)*;
@@ -156,7 +156,7 @@ Para uso real, recomenda-se ampliar o banco de imagens (centenas por classe), in
 
 ---
 
-## 📸 Evidências de Execução
+## Evidências de Execução
 
 Prints das etapas de verificação, treino, validação e teste, disponíveis em [`FarmTech_YOLO/resultados/`](FarmTech_YOLO/resultados/):
 
@@ -188,6 +188,6 @@ Prints das etapas de verificação, treino, validação e teste, disponíveis em
 
 ---
 
-## 🖼️ Créditos das Imagens
+## Créditos das Imagens
 
 Parte das imagens vem do [Unsplash](https://unsplash.com), usadas sob a [Licença Unsplash](https://unsplash.com/license). A lista completa está em [Creditos.md](FarmTech_YOLO/Creditos.md).
