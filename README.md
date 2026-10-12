@@ -10,7 +10,7 @@ Natalia de Lima Faro - RM 568610
 | Entrega | Status |
 |---|---|
 | Entrega 1 — Sistema de visão computacional com YOLO | ✅ Concluída |
-| Entrega 2 | ⏳ Em desenvolvimento |
+| Entrega 2 — Comparação: YOLO customizado x YOLO padrão x CNN do zero | ✅ Concluída |
 
 ## 👩‍🏫 Professores
 André Godoi
@@ -168,21 +168,168 @@ Prints das etapas de verificação, treino, validação e teste, disponíveis em
 
 ---
 
+## Entrega 2 — YOLO customizado x YOLO padrão x CNN do zero
+
+## Notebook
+O passo a passo completo (código comentado, gráficos, tabelas e análise crítica) está em:
+👉 [Visualizar notebook no repositório](NataliaFaro_RM568610_pbl_fase6_entrega2.ipynb)
+
+---
+
+## Objetivo
+Comparar o YOLO customizado da Entrega 1 com outras duas abordagens, usando **a mesma base de 80 imagens e a mesma divisão** (64 treino / 8 validação / 8 teste):
+
+| | Abordagem | Descrição | Treino |
+|---|---|---|---|
+| **A** | YOLO customizado | YOLOv5s ajustado com as minhas imagens (Entrega 1), com 30 e 60 épocas | Entrega 1 |
+| **B** | YOLO padrão | YOLOv5s original, pré-treinado no COCO, **sem nenhum ajuste** | nenhum |
+| **C** | CNN do zero | Rede convolucional simples em PyTorch, treinada só com as minhas 64 imagens, que classifica a imagem inteira | feito na Entrega 2 |
+
+---
+
+## Como a comparação foi feita
+O YOLO **desenha caixas** e a CNN **só classifica a imagem inteira**. O ponto em comum é a **classificação da imagem**, então a métrica principal é a **acurácia por imagem**:
+
+- **CNN:** a classe prevista para a imagem;
+- **YOLO:** a classe da detecção com maior confiança na imagem (se nada for detectado, conta como erro);
+- **YOLO padrão (B):** o COCO tem `banana`, mas **não tem `caderno`**. Considerei `book` (livro) como o equivalente mais próximo e ignorei as demais classes do COCO.
+
+Os rótulos da CNN vêm do nome do arquivo (`banana_...` ou `caderno_...`), então não foi preciso rotular de novo. Todos os modelos foram avaliados no mesmo ambiente (GPU T4), com os mesmos limiares de confiança (0,25) do YOLO.
+
+> **Cuidado com o tamanho do teste:** são só 8 imagens, então cada acerto ou erro muda a acurácia em 12,5 pontos percentuais.
+
+---
+
+## A CNN treinada do zero
+
+- **Entrada:** imagens de 128 x 128 pixels, com *data augmentation* no treino (recorte aleatório, espelhamento, rotação e variação de cor);
+- **Arquitetura:** 4 blocos convolucionais (convolução, normalização, ReLU e *max pooling*), média global, *dropout* e camada final com 2 saídas;
+- **Treino:** 40 épocas com Adam, e a validação escolhendo a melhor época (o teste nunca foi usado no treino);
+- **Resultado do treino:** melhor época **31**, tempo de treino de **7 segundos** (0,1 min) na GPU T4.
+
+![Curvas da CNN](FarmTech_YOLO/resultados_entrega2/curvas_cnn.png)
+
+---
+
+## Resultados
+
+| Abordagem | Acurácia validação | Acurácia teste | Sem detecção (teste) | mAP@0.5 teste | Tempo de treino | Inferência (ms/img) | Tamanho (MB) |
+|---|---|---|---|---|---|---|---|
+| A) YOLO customizado (30 ép.) | 0,875 | 0,875 | 1 | 0,945 | 2,4 min | 407,7 | 14,4 |
+| A) YOLO customizado (60 ép.) | 0,750 | 0,625 | 2 | 0,829 | 3,1 min | 413,8 | 14,4 |
+| B) YOLO padrão (COCO) | 0,750 | 0,500 | 4 | - | nenhum | 398,1 | 14,8 |
+| C) CNN do zero | 0,875 | 1,000 | - | - | 7 s (0,1 min) | 464,9 | 0,4 |
+
+> A validação é otimista para A e C, porque foi usada para escolher o melhor modelo. O **teste** é a medida mais honesta. O mAP não existe para a CNN (ela não localiza objetos) e não é comparável para o YOLO padrão (as classes do COCO são outras).
+
+### Imagem por imagem no teste
+
+![Tabela por imagem](FarmTech_YOLO/resultados_entrega2/tabela_teste_por_imagem.png)
+
+### O que o YOLO padrão detecta
+
+Como foi treinado no COCO, ele reconhece qualquer um dos 80 objetos do COCO, não só as minhas classes:
+
+![O que o YOLO padrão detecta](FarmTech_YOLO/resultados_entrega2/deteccoes_yolo_padrao_texto.png)
+
+![Detecções do YOLO padrão](FarmTech_YOLO/resultados_entrega2/deteccoes_yolo_padrao.png)
+
+---
+
+## Análise Crítica
+
+**Facilidade de uso e integração**
+
+- **B) YOLO padrão:** é o mais simples: carregar os pesos prontos e rodar, sem dados, rótulos ou treino. Mas só reconhece as 80 classes do COCO;
+- **A) YOLO customizado:** exigiu montar o dataset, **rotular com caixas** (a etapa mais trabalhosa), treinar e conferir os arquivos. Depois de pronto, integra com facilidade (por exemplo, com o ESP32-CAM do capítulo 3) e informa **onde** está o objeto, não só **qual** é;
+- **C) CNN do zero:** exigiu escrever a arquitetura, o laço de treino e o *data augmentation*, mas **não precisa de caixas**, só de um rótulo por imagem, muito mais barato de produzir. Em compensação, só diz a classe da imagem inteira, sem localizar nem contar objetos.
+
+**Precisão**
+
+- **Teste:** a CNN acertou **8 de 8** imagens (1,000), o YOLO customizado de 30 épocas acertou **7 de 8** (0,875), o de 60 épocas **5 de 8** (0,625) e o YOLO padrão **4 de 8** (0,500);
+- **Bananas:** as quatro abordagens acertaram as 4 bananas de teste. A diferença está toda nos **cadernos**;
+- **YOLO padrão (B):** **não reconheceu nenhum dos 4 cadernos**. Mesmo tratando `book` como `caderno`, essa classe não foi detectada em nenhuma imagem; na `caderno_test_03` ele viu `cake`, `pizza` e `umbrella`. Isso mostra o limite de um modelo com classes fixas: o que não está no COCO não é reconhecido. Ele também fragmentou a banana descascada em 4 caixas, embora a classe da imagem tenha ficado correta;
+- **YOLO customizado:** o de 30 épocas errou só a `caderno_test_03` (caderno aberto sobre madeira, não detectado). O de 60 épocas errou 3 cadernos: não detectou 2 e classificou a `caderno_test_03` como `banana`. Isso confirma a Entrega 1: treinar por mais tempo não melhorou o modelo;
+- **CNN:** acertou os 4 cadernos, inclusive o caderno aberto que o YOLO não encontrou;
+- **Cuidado:** com 8 imagens de teste, a diferença entre a CNN (8/8) e o YOLO de 30 épocas (7/8) é de **uma única imagem**, então não dá para afirmar que a CNN é melhor. Além disso, a CNN **sempre devolve uma das duas classes** (nunca diz "nada"), enquanto o YOLO precisa detectar o objeto com confiança mínima de 0,25 **e** dizer onde ele está, uma tarefa mais difícil;
+- **Overfitting na CNN:** a acurácia de treino ficou perto de 0,92, mas a de validação oscilou entre 0,38 e 0,88, e a perda de validação ficou bem acima da de treino. É sinal de overfitting e instabilidade, agravado pela validação de só 8 imagens.
+
+**Tempo de treinamento e customização**
+
+- **B:** nenhum;
+- **A:** cerca de 2,4 min (30 épocas) e 3,1 min (60 épocas) na T4, mais o tempo de rotular 72 imagens com caixas;
+- **C:** **7 segundos** (40 épocas, melhor época: 31), cerca de 20 a 27 vezes mais rápido que o YOLO e sem o trabalho de rotular caixas.
+
+**Tempo de inferência**
+
+- Os tempos ficaram todos entre **398 e 465 ms por imagem**: YOLO padrão 398,1; YOLO customizado 407,7 (30 ép.) e 413,8 (60 ép.); CNN 464,9;
+- **Atenção ao que esse número mede:** ele vai do arquivo até a classe prevista e inclui a **leitura e o redimensionamento de fotos grandes**, que pesam em todos. Por isso as diferenças são pequenas e **não refletem a velocidade da rede em si**. A CNN aparece como a mais lenta porque o meu pré-processamento (correção de rotação e redução da foto em tamanho original, na CPU) é mais pesado que o do YOLO, e não porque a rede seja lenta: ela tem só 0,4 MB;
+- **Tamanho:** a CNN (0,4 MB) é cerca de **36 vezes menor** que o YOLOv5s (14,4 a 14,8 MB), o que importa em dispositivos limitados, como o ESP32-CAM e o Jetson Nano citados no capítulo 3.
+
+---
+
+## Qual abordagem usar
+
+- **YOLO padrão (B):** quando os objetos de interesse já estão nas classes do COCO (pessoas, carros, bananas) e não há tempo ou dados para treinar;
+- **YOLO customizado (A):** quando é preciso **reconhecer e localizar** objetos específicos do cliente, e vale investir em rotular;
+- **CNN do zero (C):** quando basta **classificar a imagem inteira**, os rótulos são baratos e o modelo precisa ser leve. Com poucas imagens, tende a precisar de bem mais dados que o YOLO, que parte de pesos pré-treinados.
+
+**Recomendação para o cliente:** se o cliente só precisa saber **qual objeto aparece na foto**, vale começar pela CNN, pela simplicidade, pelo tamanho e pelo custo, ampliando antes a base de imagens para confirmar a estabilidade. Se precisa **localizar** os objetos (contar, recortar, acionar algo na posição), a melhor escolha foi o **YOLO customizado de 30 épocas** (7 de 8 e mAP@0.5 de 0,945). O **YOLO padrão** só se justifica para classes que já existem no COCO, e **mais épocas** não ajudaram nenhum dos modelos.
+
+## Limitações da Entrega 2
+
+- Base muito pequena (64 treino, 8 validação e 8 teste), e o teste só tem fotos do Unsplash;
+- O YOLO padrão foi adaptado (`book` tratado como `caderno`), então o resultado dele depende dessa escolha;
+- A validação é otimista para A e C;
+- O tempo de inferência inclui a leitura de fotos grandes e não mede a rede isoladamente;
+- A comparação por imagem favorece a CNN, que não tem a opção de "não detectar".
+
+---
+
+## Como Executar (Entrega 2)
+
+1. Abrir o notebook no Google Colab: [Abrir no Colab]([LINK DO COLAB ENTREGA 2]);
+2. Ativar a GPU em *Ambiente de execução → Alterar tipo de ambiente de execução → GPU (T4)*;
+3. Ter a pasta `FarmTech_YOLO` no Google Drive (como na Entrega 1) e os pesos `best.pt` da Entrega 1 em `FarmTech_YOLO/resultados_runs/train/`. Se usar outro caminho, ajustar `DRIVE_DATASET`, `PESOS_30` e `PESOS_60` no notebook;
+4. Executar todas as células.
+
+**Tecnologias:** Python, PyTorch, torchvision, [YOLOv5 (Ultralytics)](https://github.com/ultralytics/yolov5), Google Colab, pandas e matplotlib.
+
+---
+
+## Evidências de Execução (Entrega 2)
+
+Prints disponíveis em [`FarmTech_YOLO/resultados_entrega2/`](FarmTech_YOLO/resultados_entrega2/):
+
+1. [Treino da CNN (perda, acurácia e tempo)](FarmTech_YOLO/resultados_entrega2/treino_cnn.png)
+2. [Curvas da CNN](FarmTech_YOLO/resultados_entrega2/curvas_cnn.png)
+3. [Acurácia por imagem no teste](FarmTech_YOLO/resultados_entrega2/tabela_teste_por_imagem.png)
+4. [O que o YOLO padrão detecta (texto)](FarmTech_YOLO/resultados_entrega2/deteccoes_yolo_padrao_texto.png)
+5. [Detecções do YOLO padrão nas imagens de teste](FarmTech_YOLO/resultados_entrega2/deteccoes_yolo_padrao.png)
+6. [Tempo de inferência das abordagens](FarmTech_YOLO/resultados_entrega2/tempo_inferencia.png)
+7. [Tabela comparativa final](FarmTech_YOLO/resultados_entrega2/tabela_comparativa_entrega2.png)
+
+---
+
 ## 📁 Estrutura do Repositório
 
 ```
 ├── README.md
-├── NataliaFaro_RM568610_pbl_fase6.ipynb
+├── NataliaFaro_RM568610_pbl_fase6.ipynb             # Entrega 1
+├── NataliaFaro_RM568610_pbl_fase6_entrega2.ipynb    # Entrega 2
 └── FarmTech_YOLO/
     ├── Creditos.md
     ├── images/   (train, val, test)
     ├── labels/   (train, val, test)
-    └── resultados/
+    ├── resultados/            # prints da Entrega 1
+    └── resultados_entrega2/   # prints da Entrega 2
 ```
 
-- **`NataliaFaro_RM568610_pbl_fase6.ipynb`:** notebook executado, com o passo a passo, o código comentado, os gráficos e as conclusões;
+- **`NataliaFaro_RM568610_pbl_fase6.ipynb`:** notebook da Entrega 1, executado, com o passo a passo, o código comentado, os gráficos e as conclusões;
+- **`NataliaFaro_RM568610_pbl_fase6_entrega2.ipynb`:** notebook da Entrega 2, com o YOLO padrão, a CNN do zero e a comparação das três abordagens;
 - **`FarmTech_YOLO/images` e `FarmTech_YOLO/labels`:** imagens (versão reduzida) e rótulos no formato YOLO, separados em treino, validação e teste. A estrutura é a mesma usada no Google Drive pelo notebook;
-- **`FarmTech_YOLO/resultados`:** prints das métricas, gráficos e detecções nas imagens de teste;
+- **`FarmTech_YOLO/resultados`:** prints da Entrega 1 (métricas, gráficos e detecções nas imagens de teste);
+- **`FarmTech_YOLO/resultados_entrega2`:** prints da Entrega 2 (CNN, YOLO padrão e comparação);
 - **`FarmTech_YOLO/Creditos.md`:** fotógrafos das imagens do Unsplash.
 
 ---
