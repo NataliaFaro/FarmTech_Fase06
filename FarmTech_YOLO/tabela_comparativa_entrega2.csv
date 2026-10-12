@@ -1,0 +1,5 @@
+Abordagem,Acurácia validação,Acurácia teste,Sem detecção (teste),mAP@0.5 teste,Tempo de treino,Inferência (ms/img),Tamanho (MB)
+A) YOLO customizado (30 ép.),0.875,0.875,1,0.945,"2,4 min",407.7,14.4
+A) YOLO customizado (60 ép.),0.75,0.625,2,0.829,"3,1 min",413.8,14.4
+B) YOLO padrão (COCO),0.75,0.5,4,-,nenhum,398.1,14.8
+C) CNN do zero,0.875,1.0,0,-,0.1 min,464.9,0.4
